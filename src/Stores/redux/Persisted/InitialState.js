@@ -1,5 +1,4 @@
 export const INITIAL_STATE = {
   AUTH: null,
-  user: null,
-  token: null
+  APP_DATA: null,
 };

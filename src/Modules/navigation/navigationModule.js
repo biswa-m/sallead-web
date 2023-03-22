@@ -13,7 +13,7 @@ const navigationModule = {
   matchCurrentPath: (path) => {
     if (!path) return false;
 
-    let r1 = new RegExp(`^${Config.relativePath}${path}/+.*`);
+    let r1 = new RegExp(`^${config.relativePath}${path}/+.*`);
 
     return !!(window.location.pathname + "/").match(r1);
   },

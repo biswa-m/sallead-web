@@ -28,7 +28,7 @@ const decrypt = (x) => {
 const api = {
   request: ({ uri, params, body, headers: headerProps, method = "GET" }) => {
     let headers = {
-      encryption: "encrypt",
+      "x-encryption": "encrypt",
       appname: config.appname,
       ...(headerProps || {}),
     };
@@ -37,11 +37,12 @@ const api = {
         method,
         url: config.apiUrl + uri,
         headers,
-        data: headers?.encryption === "encrypt" ? encryptPayload(body) : body,
+        data:
+          headers?.["x-encryption"] === "encrypt" ? encryptPayload(body) : body,
         params,
       })
       .then((x) =>
-        headers?.encryption === "encrypt" ? decrypt(x.data.data) : x.data
+        headers?.["x-encryption"] === "encrypt" ? decrypt(x.data.data) : x.data
       )
       .catch((e) => {
         console.log(e);
