@@ -5,6 +5,7 @@ import { isLoggedIn } from "../../Stores/redux/Persisted/Selectors";
 import PActions from "../../Stores/redux/Persisted/Actions";
 import UnpActions from "../../Stores/redux/Unpersisted/Actions";
 import { Link } from "react-router-dom";
+import authModule from "../../Modules/auth/auth";
 
 class RootScreen extends Component {
   render() {
@@ -16,11 +17,30 @@ class RootScreen extends Component {
             <>
               <div style={{ padding: "0 5px" }}>My Leads</div>
               <div style={{ padding: "0 5px" }}>Profile</div>
+              <div
+                onClick={() => authModule.confirmAndLogout()}
+                style={{ padding: "0 5px" }}
+              >
+                Logout
+              </div>
             </>
           ) : (
-            <Link style={{ padding: "0 5px" }} to="/login">Login</Link>
+            <Link
+              style={{ padding: "0 5px" }}
+              onClick={() =>
+                this.props.setScreenState(
+                  { isVisible: true },
+                  false,
+                  "LOGIN_SCREEN"
+                )
+              }
+            >
+              Login
+            </Link>
           )}
-          <a style={{ padding: "0 5px" }} href="tel:000000000">Contact</a>
+          <a style={{ padding: "0 5px" }} href="tel:000000000">
+            Contact
+          </a>
         </div>
       </div>
     );

@@ -154,12 +154,12 @@ class BrowseScreen extends Component {
     let description =
       item.consumerType === "Home Buyer" ? (
         <span>
-          I am Home Buyer from {address} and I am looking to buy a home in
-          {lookingAtAddress}. I'm looking for a home for
+          I am Home Buyer from {address} and I am looking to buy a home in{' '}
+          {lookingAtAddress}. I'm looking for a home for{' '}
           {item.minBudget
             ? `$${item.minBudget?.toLocaleString()}-$${item.budget?.toLocaleString()}`
-            : `less than $${item.budget?.toLocaleString()}`}{" "}
-          with a possible down payment of ${item.financing?.toLocaleString()}+.
+            : `less than $${item.budget?.toLocaleString()}`}{' '}
+          with a possible down payment of ${item.financing?.toLocaleString()}+.{' '}
           I have {item.creditHistory} credit with a household income of $
           {item.income?.toLocaleString()}K+
         </span>

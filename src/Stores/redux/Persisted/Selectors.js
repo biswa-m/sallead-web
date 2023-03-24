@@ -6,5 +6,5 @@
  */
 
 export const isLoggedIn = (state) => {
-  return !!state.pState?.AUTH?.token;
+  return !!state.pState?.AUTH?.user?.id;
 };
