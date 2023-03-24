@@ -42,7 +42,9 @@ const api = {
         params,
       })
       .then((x) =>
-        headers?.["x-encryption"] === "encrypt" ? decrypt(x.data.data) : x.data
+        headers?.["x-encryption"] === "encrypt" && x.data?.data
+          ? decrypt(x.data.data)
+          : x.data
       )
       .catch((e) => {
         console.log(e);

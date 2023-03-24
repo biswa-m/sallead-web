@@ -74,7 +74,10 @@ class BrowseScreen extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.leads?.length !== this.props.leads?.length) {
+    if (
+      prevProps.leads?.length !== this.props.leads?.length ||
+      prevProps.leadRefreshed !== this.props.leadRefreshed
+    ) {
       setTimeout(() => {
         this.loadSearchResult();
       }, 50);
@@ -130,17 +133,23 @@ class BrowseScreen extends Component {
 
   onUnlock(item) {
     try {
-      const index = this.state.leads?.findIndex((id) => item.id);
+      const index = this.state.leads?.findIndex((x) => x.id == item.id);
       if (index > -1) {
         this.setState({
           leads: update(this.state.leads, { $merge: { [index]: item } }),
         });
       }
 
-      apiModule
-        .loadLeads()
-        .then((leads) => this.props.setScreenState({ leads }, true, "APP_DATA"))
-        .catch(console.error);
+      // apiModule
+      //   .loadLeads()
+      //   .then((leads) =>
+      //     this.props.setScreenState(
+      //       { leads, leadRefreshed: Date.now() },
+      //       true,
+      //       "APP_DATA"
+      //     )
+      //   )
+      //   .catch(console.error);
     } catch (e) {
       console.error(e);
     }
@@ -154,12 +163,12 @@ class BrowseScreen extends Component {
     let description =
       item.consumerType === "Home Buyer" ? (
         <span>
-          I am Home Buyer from {address} and I am looking to buy a home in{' '}
-          {lookingAtAddress}. I'm looking for a home for{' '}
+          I am Home Buyer from {address} and I am looking to buy a home in{" "}
+          {lookingAtAddress}. I'm looking for a home for{" "}
           {item.minBudget
             ? `$${item.minBudget?.toLocaleString()}-$${item.budget?.toLocaleString()}`
-            : `less than $${item.budget?.toLocaleString()}`}{' '}
-          with a possible down payment of ${item.financing?.toLocaleString()}+.{' '}
+            : `less than $${item.budget?.toLocaleString()}`}{" "}
+          with a possible down payment of ${item.financing?.toLocaleString()}+.{" "}
           I have {item.creditHistory} credit with a household income of $
           {item.income?.toLocaleString()}K+
         </span>
@@ -414,6 +423,7 @@ const SCREEN_NAME = "HOME_SCREEN";
 const mapStateToProps = (state) => ({
   isLoggedIn: isLoggedIn(state),
   leads: state.pState.APP_DATA?.leads,
+  leadRefreshed: state.pState.APP_DATA?.leadRefreshed,
 });
 
 const mapDispatchToProps = (dispatch) => ({

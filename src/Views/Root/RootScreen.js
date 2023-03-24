@@ -19,7 +19,9 @@ class RootScreen extends Component {
 
     apiModule
       .loadLeads()
-      .then((leads) => this.props.setScreenState({ leads }, true))
+      .then((leads) =>
+        this.props.setScreenState({ leads, leadRefreshed: Date.now() }, true)
+      )
       .catch(console.error);
   }
 
