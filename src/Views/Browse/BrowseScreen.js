@@ -13,7 +13,7 @@ import navigationModule from "../../Modules/navigation/navigationModule";
 import { Link } from "react-router-dom";
 import apiModule from "../../Modules/api/apiModule";
 
-class BrowseScreen extends Component {
+export class BrowseScreen extends Component {
   queries = navigationModule.getQueries();
   state = {
     keyword: this.queries?.keyword,
@@ -84,7 +84,7 @@ class BrowseScreen extends Component {
     }
   }
 
-  async loadSearchResult() {
+  async loadSearchResult(opt) {
     try {
       const {
         state: {
@@ -106,6 +106,7 @@ class BrowseScreen extends Component {
 
       const result = leads?.filter((x) => {
         return (
+          (!opt?.myLead || x.sharesUserOwns > 0) &&
           (searchType === "legacy" ? x.isLegacy : !x.isLegacy) &&
           (((!city || x.city === city) && (!state || x.state === state)) ||
             ((!city || x.lookingAtCity === city) &&
@@ -133,7 +134,7 @@ class BrowseScreen extends Component {
 
   onUnlock(item) {
     try {
-      const index = this.state.leads?.findIndex((x) => x.id == item.id);
+      const index = this.state.leads?.findIndex((x) => x.id === item.id);
       if (index > -1) {
         this.setState({
           leads: update(this.state.leads, { $merge: { [index]: item } }),
@@ -189,9 +190,27 @@ class BrowseScreen extends Component {
     return description;
   }
 
+  get searchbar() {
+    const {
+      state: { keyword },
+    } = this;
+    return (
+      <center>
+        <SearchBar
+          initialValue={keyword}
+          goToSearchResult={(x) =>
+            this.setState({ city: "", state: "", keyword: "", ...x }, () =>
+              this.loadSearchResult()
+            )
+          }
+        />
+      </center>
+    );
+  }
+
   render() {
     const {
-      state: { searchType, keyword, city, state, leads },
+      state: { searchType, city, state, leads },
     } = this;
 
     const address =
@@ -200,16 +219,7 @@ class BrowseScreen extends Component {
     return (
       <div>
         <TopNav />
-        <center>
-          <SearchBar
-            initialValue={keyword}
-            goToSearchResult={(x) =>
-              this.setState({ city: "", state: "", keyword: "", ...x }, () =>
-                this.loadSearchResult()
-              )
-            }
-          />
-        </center>
+        {this.searchbar}
 
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           {this.searchTypeOptions.map((x) => (
@@ -410,16 +420,18 @@ class LeadRow extends React.PureComponent {
 
         <div>
           <Link to={`/detail/${item.id}`}>View details »</Link>
-          <button onClick={() => this.unlock()} disabled={unlocking}>
-            {unlocking ? "Unlocking" : "Unlock Contact Info"}
-          </button>
+          {leadUnlocked ? null : (
+            <button onClick={() => this.unlock()} disabled={unlocking}>
+              {unlocking ? "Unlocking" : "Unlock Contact Info"}
+            </button>
+          )}
         </div>
       </div>
     );
   }
 }
 
-const SCREEN_NAME = "HOME_SCREEN";
+const SCREEN_NAME = "BROWSE_SCREEN";
 const mapStateToProps = (state) => ({
   isLoggedIn: isLoggedIn(state),
   leads: state.pState.APP_DATA?.leads,

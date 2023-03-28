@@ -15,8 +15,12 @@ class RootScreen extends Component {
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           {this.props.isLoggedIn ? (
             <>
-              <div style={{ padding: "0 5px" }}>My Leads</div>
-              <div style={{ padding: "0 5px" }}>Profile</div>
+              <Link style={{ padding: "0 5px" }} to="/myleads">
+                My Leads
+              </Link>
+              <Link style={{ padding: "0 5px" }} to="/profile">
+                Profile
+              </Link>
               <div
                 onClick={() => authModule.confirmAndLogout()}
                 style={{ padding: "0 5px" }}

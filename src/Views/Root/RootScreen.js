@@ -29,7 +29,9 @@ class RootScreen extends Component {
     if (prevProps.isLoggedIn !== this.props.isLoggedIn) {
       apiModule
         .loadLeads()
-        .then((leads) => this.props.setScreenState({ leads }, true));
+        .then((leads) =>
+          this.props.setScreenState({ leads, leadRefreshed: Date.now() }, true)
+        );
     }
   }
 
